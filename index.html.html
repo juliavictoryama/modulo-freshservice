@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulos da Freshservice</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --surface2: #1a1e2a;
+      --border: #252a38;
+      --accent: #4f8ef7;
+      --accent2: #7c5cbf;
+      --accent3: #29c4a9;
+      --accent4: #f7934f;
+      --accent5: #f15078;
+      --accent6: #ececeb;
+      --conta: #ee5a24;
+      --text: #e8ecf5;
+      --muted: #7a839e;
+      --user: #45a4ec;
+      --freddy: #943ed6;
+      --canais: #25c16f;
+      --serviços: #d33c4e;
+      --automacao: #9b65c3;
+      --operações: #3278b2;
+      --tag-bg: rgba(79,142,247,0.12);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(255,255,255,.018) 60px),
+        repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(255,255,255,.018) 60px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative; z-index: 1;
+      padding: 80px 40px 60px;
+      max-width: 1100px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--tag-bg);
+      border: 1px solid rgba(79, 166, 247, 0.3);
+      color: var(--accent);
+      font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 999px; width: fit-content;
+    }
+    .hero-badge span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 800; line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff 30%, #7ba8f9 70%, #a78bfa 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero p { color: var(--muted); font-size: 16px; max-width: 620px; font-weight: 300; }
+
+    /* SECTION GROUPS NAV */
+    .groups-nav {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto 16px; padding: 0 40px;
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .group-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600;
+      letter-spacing: .05em; padding: 7px 14px; border-radius: 999px;
+      text-decoration: none; cursor: pointer;
+      transition: background .15s, color .15s, border-color .15s;
+    }
+    .group-pill:hover { background: var(--surface2); color: var(--text); border-color: rgba(255,255,255,.12); }
+    .group-pill .dot { width: 7px; height: 7px; border-radius: 50%; }
+
+    /* CONTENT WRAPPER */
+    .content {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 40px 100px;
+      display: flex; flex-direction: column; gap: 48px;
+    }
+
+    /* GROUP BLOCK */
+    .group-block { display: flex; flex-direction: column; gap: 20px; }
+    .group-header {
+      display: flex; align-items: center; gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .group-label {
+      font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase; margin-bottom: 2px;
+    }
+    .group-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: var(--text); }
+    .group-desc { color: var(--muted); font-size: 13px; font-weight: 300; }
+
+    /* CARD */
+    .section-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden;
+      transition: border-color .2s;
+      animation: fadeUp .4s ease both;
+    }
+    .section-card:hover { border-color: rgba(79,142,247,.28); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+    .card-header {
+      display: flex; align-items: flex-start; gap: 18px;
+      padding: 24px 28px 20px;
+      border-bottom: 1px solid transparent;
+      cursor: pointer;
+      transition: border-color .2s;
+    }
+    .section-card.open .card-header { border-color: var(--border); }
+    .card-icon {
+      width: 42px; height: 42px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 19px; flex-shrink: 0;
+    }
+    .card-meta { flex: 1; }
+    .card-num { font-family:'Syne',sans-serif; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px; }
+    .card-title { font-family:'Syne',sans-serif; font-size:17px; font-weight:700; color:var(--text); }
+    .card-desc { color:var(--muted); font-size:13.5px; margin-top:4px; font-weight:300; }
+    .card-toggle { color:var(--muted); font-size:18px; transition:transform .25s; flex-shrink:0; margin-top:4px; }
+    .section-card.open .card-toggle { transform:rotate(180deg); }
+
+    .card-body { display:none; padding:24px 28px 28px; }
+    .section-card.open .card-body { display:block; }
+
+.card-icon{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.card-icon img{
+    width:22px;
+    height:22px;
+    object-fit:contain;
+}
+    /* FEATURE LIST */
+    .feature-list { list-style:none; display:flex; flex-direction:column; gap:9px; }
+    .feature-list li {
+      display:flex; align-items:flex-start; gap:11px;
+      font-size:14px; color:#c8cfdf; line-height:1.55;
+    }
+    .feature-list li::before { content:'→'; color:var(--accent3); font-size:12px; flex-shrink:0; margin-top:3px; }
+
+    /* FEATURE LIST CONTA */
+    .feature-list-conta { list-style:none; display:flex; flex-direction:column; gap:9px; }
+    .feature-list-conta li {
+      display:flex; align-items:flex-start; gap:11px;
+      font-size:14px; color:#c8cfdf; line-height:1.55;
+    }
+    .feature-list-conta li::before { content:'→'; color:var(--conta); font-size:12px; flex-shrink:0; margin-top:3px; }
+
+    /* FEATURE LIST GERENCIAMENTO DE USUÁRIO */
+    .feature-list-user { list-style:none; display:flex; flex-direction:column; gap:9px; }
+    .feature-list-user li {
+      display:flex; align-items:flex-start; gap:11px;
+      font-size:14px; color:#c8cfdf; line-height:1.55;
+    }
+    .feature-list-user li::before { content:'→'; color:var(--user); font-size:12px; flex-shrink:0; margin-top:3px; }
+
+    /* FEATURE LIST FREDDY*/
+    .feature-list-freddy { list-style:none; display:flex; flex-direction:column; gap:9px; }
+    .feature-list-freddy li {
+      display:flex; align-items:flex-start; gap:11px;
+      font-size:14px; color:#c8cfdf; line-height:1.55;
+    }
+    .feature-list-freddy li::before { content:'→'; color:var(--freddy); font-size:12px; flex-shrink:0; margin-top:3px; }
+
+    /* FEATURE LIST CANAIS*/
+    .feature-list-canais { list-style:none; display:flex; flex-direction:column; gap:9px; }
+    .feature-list-canais li {
+      display:flex; align-items:flex-start; gap:11px;
+      font-size:14px; color:#c8cfdf; line-height:1.55;
+    }
+    .feature-list-canais li::before { content:'→'; color:var(--canais); font-size:12px; flex-shrink:0; margin-top:3px; }
+
+    /* FEATURE LIST GERENCIAMENTO DE SERVIÇOS*/
+    .feature-list-serviços { list-style:none; display:flex; flex-direction:column; gap:9px; }
+    .feature-list-serviços li {
+      display:flex; align-items:flex-start; gap:11px;
+      font-size:14px; color:#c8cfdf; line-height:1.55;
+    }
+    .feature-list-serviços li::before { content:'→'; color:var(--serviços); font-size:12px; flex-shrink:0; margin-top:3px; }
+
+     /* FEATURE LIST AUTOMAÇÃO E PRODUTIVIDADE*/
+    .feature-list-automacao { list-style:none; display:flex; flex-direction:column; gap:9px; }
+    .feature-list-automacao li {
+      display:flex; align-items:flex-start; gap:11px;
+      font-size:14px; color:#c8cfdf; line-height:1.55;
+    }
+    .feature-list-automacao li::before { content:'→'; color:var(--automacao); font-size:12px; flex-shrink:0; margin-top:3px; }
+
+    /* FEATURE LIST GERENCIAMENTO DE OPERAÇÕES DE TI*/
+    .feature-list-operações { list-style:none; display:flex; flex-direction:column; gap:9px; }
+    .feature-list-operações li {
+      display:flex; align-items:flex-start; gap:11px;
+      font-size:14px; color:#c8cfdf; line-height:1.55;
+    }
+    .feature-list-operações li::before { content:'→'; color:var(--operações); font-size:12px; flex-shrink:0; margin-top:3px; }
+
+    /* BADGE */
+    .badge {
+      display:inline-block;
+      background:var(--tag-bg); border:1px solid rgba(79,142,247,.25);
+      color:var(--accent); font-size:11px; font-weight:500;
+      letter-spacing:.05em; padding:3px 10px; border-radius:999px; margin-bottom:14px;
+    }
+    .badge.enterprise { background:rgba(241, 110, 63, 0.438); border-color:rgba(250, 67, 0); color:var(--conta); }
+    .badge.orgadmin { background:rgba(241, 110, 63, 0.438); border-color:rgb(250, 67, 0); color:var(--conta); }
+    .badge.freddy { background:rgba(181, 119, 236, 0.322); border-color:#9731e6; color:var(--freddy); }
+
+    /* NOTE */
+    .note {
+      margin-top:18px; background:rgba(41,196,169,.07);
+      border-left:3px solid var(--accent3); border-radius:0 10px 10px 0;
+      padding:12px 16px; font-size:13.5px; color:#a0b5ae; line-height:1.6;
+    }
+
+     /* NOTE GLOBAL */
+    .note_global {
+      margin-top:18px; background:rgba(196, 41, 41, 0.07);
+      border-left:3px solid var(--accent5); border-radius:0 10px 10px 0;
+      padding:12px 16px; font-size:13.5px; color:#b5a0a0; line-height:1.6;
+    }
+    /* SECTION NOTE */
+     .section-note{
+    margin:16px 0;
+    padding:16px 18px;
+
+    background:rgba(196, 41, 41, 0.233);
+
+    border:1px solid rgba(204, 0, 0, 0.5);
+    border-radius:16px;
+
+    color:#d9e6ff;
+}
+    /* TAG GRID */
+    .tag-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:7px; margin-top:14px; }
+    .tag-item {
+      background:var(--surface2); border:1px solid var(--border);
+      border-radius:8px; padding:8px 12px; font-size:13px; color:var(--muted); text-align:center;
+    }
+
+    /* SUB-SECTION */
+    .sub-section { margin-top:22px; }
+    .sub-section + .sub-section { margin-top:24px; padding-top:24px; border-top:1px solid var(--border); }
+    .sub-title {
+      font-family:'Syne',sans-serif; font-size:12px; font-weight:600;
+      letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:12px;
+    }
+
+    /* FOOTER */
+    footer { position:relative; z-index:1; border-top:1px solid var(--border); padding:32px 40px; }
+    .footer-inner { max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+
+    /* RESPONSIVE */
+    @media (max-width:640px) {
+      .hero,.groups-nav,.content { padding-left:18px; padding-right:18px; }
+      .card-header { padding:18px; }
+      .card-body { padding:18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span></span>Passagem de Conhecimento</div>
+  <h1>Módulos da<br>Freshservice</h1>
+  <p>Documentação completa dos módulos de administração da plataforma Freshservice, organizada por seções conforme a documentação oficial.</p>
+</section>
+
+<!-- GROUP PILLS NAV -->
+<div class="groups-nav">
+  <a class="group-pill" href="#g-account"><span class="dot" style="background:#ee5a24"></span>Configurações da Conta</a>
+  <a class="group-pill" href="#g-users"><span class="dot" style="background:#45a4ec"></span>Gerenciamento de Usuários</a>
+  <a class="group-pill" href="#g-freddy"><span class="dot" style="background:#a85ce4"></span>IA do Freddy</a>
+  <a class="group-pill" href="#g-channels"><span class="dot" style="background:#25c16f"></span>Canais</a>
+  <a class="group-pill" href="#g-service"><span class="dot" style="background:#d33c4e"></span>Gerenciamento de Serviços</a>
+  <a class="group-pill" href="#g-automation"><span class="dot" style="background:#9b65c3"></span>Automação & Produtividade</a>
+  <a class="group-pill" href="#g-it-operations"><span class="dot" style="background:#3278b2"></span>Gerenciamento de Operações de TI</a> 
+</div>
+
+<main class="content">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- GRUPO 1 — CONFIGURAÇÕES DA CONTA               -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="group-block" id="g-account">
+  <div class="group-header">
+    <div class="group-icon" style="background:rgba(238, 90, 36);">
+    </div>
+    <div>
+      <div class="group-label" style="color:#ee5a24">Seção 1</div>
+      <div class="group-title">Configurações da Conta</div>
+      <div class="group-desc">Gerenciamento global da conta, faturamento, espaços de trabalho e conformidade</div>
+      
+    </div>
+  </div>
+
+  <!-- 1.1 Conta -->
+  <div class="section-card open">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(79, 141, 247, 0);">
+        <img src="https://i.postimg.cc/sXcM9QvD/account-3dc6218e34c2e89514f33eb74682c97bb140359d83c748ecef12bc255143e350.png" alt="Conta">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#ee5a24">Módulo 1.1</div>
+        <div class="card-title">Conta</div>
+        <div class="card-desc">Informações e gerenciamento geral da conta Freshservice</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-conta">
+        <li>Exibir as informações essenciais: Nome da conta, Plano atual, Ativos, Quantidade de agentes contratados, Data center e versão</li>
+        <li>Editar informações de contato utilizadas para todas as comunicações relacionadas à conta</li>
+        <li>Solicitar o cancelamento da conta</li>
+        <li>Exportar dados da conta</li>
+      </ul>
+      
+      <a href="https://support.freshservice.com/support/solutions/articles/50000004846-how-to-view-freshservice-subscription-details" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+      
+    </div>
+  </div>
+
+  <!-- 1.2 Planos e Faturamento -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 141, 247, 0);">
+        <img src="https://i.postimg.cc/503XqY6m/billing-df1272d114df25217ba16567d267a2459acd825a93f30481012a33dd9f46ee1d.png" alt="Planos e Faturamento">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#ee5a24">Módulo 1.2</div>
+        <div class="card-title">Planos e Faturamento</div>
+        <div class="card-desc">Gerenciamento de planos, assinaturas e licenças</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <span class="badge orgadmin">Somente Org Admins</span>
+      <p style="color:var(--muted);font-size:14px;line-height:1.6;">Módulo destinado ao gerenciamento dos planos, assinaturas e licenças da ferramenta. O acesso é restrito exclusivamente a administradores da organização.</p>
+      
+      <a href="https://support.freshservice.com/support/solutions/articles/50000004846-how-to-view-freshservice-subscription-details" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 1.3 Espaços de Trabalho -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 141, 247, 0);">
+        <img src="https://i.postimg.cc/Jh9hN3rc/manage-workspace-1c286268bf1e126a23b3730e21a0b907cd9ba581c038091414c10a1383234e96.png" alt="Gerenciar Espaços de Trabalho">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#ee5a24">Módulo 1.3</div>
+        <div class="card-title">Gerenciar Espaços de Trabalho</div>
+        <div class="card-desc">Criação e administração de workspaces</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-conta">
+        <li>Listar todos os espaços de trabalho configurados e publicados</li>
+        <li>Criar um novo espaço de trabalho</li>
+        <li>Enviar feedbacks a respeito do módulo</li>
+        <li>Solicitar o aumento de limite de espaços de trabalho</li>
+        <li>Visualizar gerentes do espaço e quantidade de agentes presentes</li>
+      </ul>
+      <div class="note">Existem dois tipos de configurações: <strong>globais</strong> (aplicadas a todos os workspaces) e <strong>locais</strong> (aplicadas apenas ao workspace específico).</div>
+      
+      <a href="https://support.freshservice.com/support/solutions/folders/50000001058" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 1.4 Gerenciamento de Instâncias -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 141, 247, 0);">
+        <img src="https://i.postimg.cc/0yTK81Tf/instance-management-4e918e9a5a0c5715a93ecb8da703f8d47e2780d7d9d063abe2508d1d08a470ca.png" alt="Gerenciamento de Instâncias">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#ee5a24">Módulo 1.4</div>
+        <div class="card-title">Gerenciamento de Instâncias</div>
+        <div class="card-desc">Ambiente sandbox para testes antes da produção</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <span class="badge enterprise">Somente Contas Enterprise</span>
+      <ul class="feature-list-conta">
+        <li>Criação de sandboxes para teste de novos recursos e configurações</li>
+        <li>Sincronização seletiva e bidirecional de configurações entre os dois ambientes</li>
+        <li>Exclusão e recriação do ambiente para atualizações recorrentes</li>
+      </ul>
+      
+      <a href="https://support.freshservice.com/support/solutions/folders/50000001781" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 1.5 Passes de um Dia -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 141, 247, 0);">
+        <img src="https://i.postimg.cc/CxBfTx62/day-pass-0b800661cea3a953a24a08e649f97c961e21824d1aa1d3bfdab8233b2d98b7c0.png" alt="Passes de um Dia">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#ee5a24">Módulo 1.5</div>
+        <div class="card-title">Passes de um Dia</div>
+        <div class="card-desc">Acesso ocasional de agentes à plataforma</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-conta">
+        <li>Um passe diário é consumido a cada dia em que um agente ocasional realiza login</li>
+        <li>Passes adquiridos em múltiplos de 5 por vez</li>
+        <li>Renovação automática configurável ao se esgotarem</li>
+      </ul>
+      
+      <a href="https://support.freshservice.com/support/solutions/articles/224291-what-s-the-difference-between-full-time-and-occasional-agents-" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 1.6 Log de Auditoria -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 141, 247, 0);">
+        <img src="https://i.postimg.cc/NM4K7957/audit-logs-322dcb1b8d29a042c764871e1e80717f6a0d62ce055665cd0a1c94e8ee3c0f47.png" alt="Log de Auditoria">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#ee5a24">Módulo 1.6</div>
+        <div class="card-title">Log de Auditoria</div>
+        <div class="card-desc">Rastreabilidade de todas as alterações administrativas</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px;">Mantém histórico completo de alterações na seção de Administração, permitindo filtrar por intervalo de datas e tipo de objeto para auditorias internas e externas.</p>
+      <div class="sub-title">Módulos Suportados</div>
+      <div class="tag-grid">
+        <div class="tag-item">Conta</div><div class="tag-item">Planos e Faturamento</div>
+        <div class="tag-item">Agentes</div><div class="tag-item">Solicitantes</div>
+        <div class="tag-item">Grupos de Agentes</div><div class="tag-item">Mudanças</div>
+        <div class="tag-item">Sandbox</div><div class="tag-item">SLAs</div>
+        <div class="tag-item">Credenciais</div><div class="tag-item">Departamentos</div>
+        <div class="tag-item">Apps de Orquestração</div><div class="tag-item">Automações de Cenário</div>
+        <div class="tag-item">Funções</div><div class="tag-item">Assumir Identidade</div>
+        <div class="tag-item">Campos de Fornecedores</div>
+      </div>
+      <div class="note"><strong>Obs.:</strong> Eventos de módulos ITIL individuais (Tickets, Problems, Change etc.) são acompanhados em <strong>Atividades</strong>.</div>
+      <a href="https://support.freshservice.com/support/solutions/articles/232444-how-to-access-audit-log-in-freshservice-" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 1.7 Notificações por E-mail -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 141, 247, 0);">
+        <img src="https://i.postimg.cc/t4ZVQ4Mj/email-notifications-3dd86b4620e18f2ccf18ff009287780f3d3a4ddd651b5d74fbe25b6f49ce1f39.png" alt="Notificações por E-mail">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#ee5a24">Módulo 1.7</div>
+        <div class="card-title">Notificações por E-mail</div>
+        <div class="card-desc">Comunicações automáticas para agentes e solicitantes</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-conta">
+        <li>Notificações automáticas enviadas quando eventos específicos ocorrem no service desk</li>
+        <li>Personalizáveis conforme a identidade visual do cliente, com suporte a conteúdos dinâmicos</li>
+        <li>Workspaces de TI incluem módulos de Mudanças, Problemas e Liberações; workspaces de Negócios não possuem esses módulos</li>
+        <li>Configurações globais permitem editar notificações de Projetos, Jornadas, ativação de usuários e fonte padrão</li>
+      </ul>
+      <div class="note"><strong>Obs.:</strong> Quando o plano permite vários idiomas, é possível criar modelos de notificações para cada idioma.</div>
+      <a href="https://support.freshservice.com/support/solutions/folders/254467" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 1.8 Arquivamento de Dados -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 141, 247, 0);">
+        <img src="https://i.postimg.cc/g2X6F2BN/data-archival-6fa15542b2378410da5c8300b1f53ec4a4d7627d1bbc03b54afcaa17d6bc3179.png" alt="Arquivamento de Dados">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#ee5a24">Módulo 1.8</div>
+        <div class="card-title">Arquivamento de Dados</div>
+        <div class="card-desc">Gestão do ciclo de vida de tickets e dados inativos</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px;">Permite selecionar prazo para arquivamento de tickets fechados após inatividade, evitando acúmulo de registros que prejudicam a performance das consultas.</p>
+      <div class="sub-title">Prazos Disponíveis</div>
+      <div class="tag-grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr));">
+        <div class="tag-item">6 meses</div><div class="tag-item">1 ano</div>
+        <div class="tag-item">1 ano e 6 meses</div><div class="tag-item">2 anos</div><div class="tag-item">3 anos</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- GRUPO 2 — GERENCIAMENTO DE USUÁRIOS            -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="group-block" id="g-users">
+  <div class="group-header">
+    <div class="group-icon" style="background:rgba(69, 164, 236);">
+    </div>
+    <div>
+      <div class="group-label" style="color:#45a4ec">Seção 2</div>
+      <div class="group-title">Gerenciamento de Usuários</div>
+      <div class="group-desc">Agentes, solicitantes, grupos, funções, departamentos e permissões</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="https://assets10.freshservice.com/assets/admin-home/agent-a50ad8a38f19733792126ff97f1a74a2ace8c4e21b7fc2c59dec6073016327f8.svg" alt="Agentes">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.1</div>
+        <div class="card-title">Agentes</div>
+        <div class="card-desc">Gerenciamento de agentes do service desk, permissões e direitos de acesso</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Listar todos os agentes cadastrados com opções de edição de permissões e direitos de acesso</li>
+        <li>Adicionar novos agentes via botão "Novo Agente"</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/204591-managing-agents-in-freshservice" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+ <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="file:///C:/Users/POPULOS/Documents/agent_group-22db2a45ccd42b00b04326e413cca07bd9c30a943012891f8e360481fd17609e.svg" alt="Grupos de Agentes">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.2</div>
+        <div class="card-title">Grupos de Agentes</div>
+        <div class="card-desc">Organização de agentes em equipes por especialidade ou função</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Organizar agentes em grupos (ex.: "Vendas", "Gerenciamento de Produto")</li>
+        <li>Atribuir tickets automaticamente ao próximo agente disponível via Round Robin</li>
+        <li>Um agente pode pertencer a múltiplos grupos simultaneamente</li>
+        <li>Definir horários comerciais e feriados específicos por grupo</li>
+      </ul>
+      <div class="note_global"><strong>Obs.:</strong> Essa configuração não é global; ela é aplicada e administrada de forma independente em cada workspace.</div>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000005578-managing-agent-groups" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="https://assets10.freshservice.com/assets/admin-home/requesters-5452529bdd3748c133834b8c6043b24b5ec7dd719f11e74288a50a2d9f691d6b.svg" alt="Solicitantes (Requesters)">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.3</div>
+        <div class="card-title">Solicitantes (Requesters)</div>
+        <div class="card-desc">Gestão de usuários finais com acesso ao portal de autoatendimento</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Adicionar solicitantes manualmente ou importar lista via arquivo CSV</li>
+        <li>Visualizar histórico de tickets e informações de contato de cada solicitante</li>
+      </ul>
+       <a href="https://support.freshservice.com/support/solutions/articles/154762-managing-requesters-in-freshservice" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="https://i.postimg.cc/jdkJF7v3/contact-group-7eeb4cfde430967b006616a22ad6c2cb787c17d846cdec8d8e7dac512eca803e.png" alt="Grupos de Solicitantes">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.4</div>
+        <div class="card-title">Grupos de Solicitantes</div>
+        <div class="card-desc">Criação e gerenciamento dos grupos e permissões para cada membro</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Restringir o acesso de determinados grupos a itens específicos, pastas e solicitações de inegração</li>
+        <li>Adicionar solicitantes automaticamento com base nas regras definidas</li>
+      </ul>
+       <a href="https://support.freshservice.com/support/solutions/articles/50000001678-create-manage-requester-groups" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="https://i.postimg.cc/nzZsDYcr/user-fields-ce55000b2466ea30839710b6f220bd083b7e8bbe4e337dfc2c7f099e62f406e2.png" alt="Grupos de Solicitantes">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.5</div>
+        <div class="card-title">Campos do Usuário</div>
+        <div class="card-desc">Criação e gerenciamento dos campos que capturam informações para usuários</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Criar campos personalizados para agentes (ex.: habilidades técnicas, turno e disponibilidade)</li>
+        <li>Adicionar campos personalizados ao formulário de solicitante para contexto adicional</li>
+      </ul>
+       <a href="https://support.freshservice.com/support/solutions/articles/210046-adding-custom-fields-for-users-requesters-agents-in-freshservice" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="https://assets10.freshservice.com/assets/admin-home/cab-e3537587214c549b57c83ea3fe889456c5a08a79be98c7f3714b09c418b44a8a.svg" alt="CCM (Conselho Consultivo de Mudanças)">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.6</div>
+        <div class="card-title">CCM (Conselho Consultivo de Mudanças)</div>
+        <div class="card-desc">Comitê consultivo para avaliar as mudanças antes da implementação</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Criar conselhos personalizados com especialistas de áreas específicas</li>
+        <li>Membros revisam e aprovam ou rejeitam mudanças antes da implementação</li>
+        <li>Change Manager seleciona o CCM e membros individuais para revisar cada mudança</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000011840-manage-change-advisory-board" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="https://assets10.freshservice.com/assets/admin-home/role-bf18b6e526858d4262441e50f82f6b8ccec348583336a37cbbd77f295e125d4a.svg" alt="Funções (Roles)">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.7</div>
+        <div class="card-title">Funções (Roles)</div>
+        <div class="card-desc">Controle de permissões de acesso por perfil de agente</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Criar funções personalizadas com permissões granulares de acesso ao helpdesk</li>
+        <li>Definir o que cada função pode fazer: responder, atribuir, adicionar notas internas, etc.</li>
+        <li>Atribuir funções a agentes na criação ou edição do perfil</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000005577-understanding-roles-for-agents" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="https://assets10.freshservice.com/assets/admin-home/department-fields-00ba85789bb03bf34832b1321d4aa1883ce172e961cd9c637e2c85716b7e28e4.svg" alt="Campos de Departamento">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.8</div>
+        <div class="card-title">Campos de Departamento</div>
+        <div class="card-desc">Criação e gerenciamento dos campos que capturam informações para departamentos</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Adicionar campos personalizados ao formulário de departamento (ex.: localização física)</li>
+        <li>Tornar campos obrigatórios</li>
+        <li>Realizar a exclusão de campos personalizados </li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/227596-adding-custom-fields-for-requester-departments" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="https://assets10.freshservice.com/assets/admin-home/departments-8ebf0aa4b61a09c5830c81fdb8527e34e47a1b3c09316ba4e227f4d0d2915fe4.svg" alt="Campos de Departamento">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.9</div>
+        <div class="card-title">Departamentos</div>
+        <div class="card-desc">Agrupamento de solicitantes por área organizacional</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Configurar departamentos e agrupar solicitantes por natureza de cargo</li>
+        <li>Classificar tickets, problemas, mudanças e liberações por departamento</li>
+        <li>Cada departamento possui um responsável para aprovação de solicitações de serviço</li>
+        <li>Criar base de conhecimento e categorias de fórum exclusivas por departamento</li>
+      </ul>
+    </div>
+  </div>
+
+ <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(255, 255, 255, 0);">
+        <img src="https://i.postimg.cc/LXRq1B6g/work-schedules-5641329fb05b9c3124db88e8d5c759cd7d12997de61784a4c1a3315471e468c4.png" alt="Horário de Trabalho">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#45a4ec">Módulo 2.10</div>
+        <div class="card-title">Horário de trabalho</div>
+        <div class="card-desc">Atribuir horário de trabalho aos usuários para calcular sua carga de trabalho</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-user">
+        <li>Criação de novos horários de trabalho</li>
+        <li>Atribuir horários de trabalho aos agentes</li>
+        <li>Gerenciamento de carga de trabalho</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000005704-work-schedule" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+ </div>
+
+ <!-- ═══════════════════════════════════════════════ -->
+<!-- GRUPO 3 — IA DO FREDDY                          -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="group-block" id="g-freddy">
+  <div class="group-header">
+    <div class="group-icon" style="background:rgba(41,196,169,.14);"></div>
+    <div>
+      <div class="group-label" style="color:#a85ce4">Seção 3</div>
+      <div class="group-title">IA do Freddy</div>
+      <div class="group-desc">Assistência inteligente para funcionários e agentes com tecnologio Freddy e Generative AI</div>
+    </div>
+  </div>
+
+  <!-- 3.1 IA do Freddy -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(41, 196, 170, 0);">
+         <img src="https://i.postimg.cc/Cx3nFp3Z/freddy-dew-4657d66e2195336e76731b3b6fcc2df62d6f9412f6a3ecfe8c03e00e6b2cedec.png" alt="Freddy">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#a85ce4">Módulo 3.1</div>
+        <div class="card-title">Freddy</div>
+        <div class="card-desc">Habilite sugestões inteligentes e inteligência conversacional</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+       <span class="badge freddy">Somente Contas Enterprise</span>
+      <ul class="feature-list-freddy">
+        <li>Freddy AI Agente (Atende usuários de forma autônoma em portais e canais de conversação)</li>
+        <li>Freddy AI Copilot (Auxilia agentes humanos durante a execução de suas atividades)</li>
+        <li>Freddy Ai Insights (Analisa dados operacionais e gera recomendações estratégicas)</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/159916" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- GRUPO 4 — CANAIS                               -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="group-block" id="g-channels">
+  <div class="group-header">
+    <div class="group-icon" style="background:rgba(79,196,247,.14);"></div>
+    <div>
+      <div class="group-label" style="color:#25c16f">Seção 4</div>
+      <div class="group-title">Canais</div>
+      <div class="group-desc">Gerenciamento dos canais de suporte: e-mail, portal, chat e telefone</div>
+    </div>
+  </div>
+
+  <!-- 4.1 Servicebot para Microsoft Teams -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(79, 197, 247, 0);">
+        <img src="https://i.postimg.cc/3R7yvCJM/servicebot-msteams-f7125954e653d52ae63e1de9e94a4884ccf7259a818be072c35f1095ef4b2c87.png" alt="Servicebot para Microsoft Teams">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#25c16f">Módulo 4.1</div>
+        <div class="card-title">Servicebot para Microsoft Teams</div>
+        <div class="card-desc">Atendimento automatizado e catálogo de serviços diretamente no Microsoft Teams</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-canais">
+        <li>Permite criar, acompanhar e atualizar tickets sem sair do Teams</li>
+        <li>Utiliza Freddy AI para responder perguntas frequentes e solicitações de serviço</li>
+        <li>Possibilita aprovação de solicitações diretamente nas conversas</li>
+        <li>Exibe artigos da base de conhecimento conforme o contexto da solicitação</li>
+        <li>Integra equipes de suporte e usuários finais em um único canal de comunicação</li>
+      </ul>
+      <div class="note_global"><strong>Obs.:</strong> É importante validar o plano contratado pelo cliente, pois a disponibilidade de funcionalidades e recursos pode variar de acordo com a licença utilizada. </div>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000000656-integrating-servicebot-with-microsoft-teams" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 4.2 Servicebot para Slack -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 197, 247, 0);">
+        <img src="https://i.postimg.cc/PxhLwzrn/servicebot-slack-30d94017963386e0ecef4fbb8e54763e9607802b69add348d65d22f6f668d555.png" alt="Servicebot para Slack">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#25c16f">Módulo 4.2</div>
+        <div class="card-title">Servicebot para Slack</div>
+        <div class="card-desc">Atendimento automatizado e gerenciamento de solicitações dentro do Slack</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-conta">
+        <li>Permite abertura e acompanhamento de tickets diretamente pelo Slack</li>
+        <li>Utiliza Freddy AI para responder dúvidas e executar solicitações comuns</li>
+        <li>Oferece acesso rápido ao catálogo de serviços e à base de conhecimento</li>
+        <li>Permite aprovações e interações sem necessidade de acessar o portal</li>
+        <li>Mantém histórico e contexto das solicitações durante as conversas</li>
+      </ul>
+      <div class="note_global"><strong>Obs.:</strong> É importante validar o plano contratado pelo cliente, pois a disponibilidade de funcionalidades e recursos pode variar de acordo com a licença utilizada. </div>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000001887-setting-up-servicebot-for-slack" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 4.3 Freshchat -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 197, 247, 0);">
+        <img src="https://i.postimg.cc/Hkq8p1qc/freshchat-69cdd9d3cd501a805d436cfafec69ba2b0bff93500df1a820e5db5bb8f3dd849.png" alt="Freshchat">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#25c16f">Módulo 4.3</div>
+        <div class="card-title">Freshchat</div>
+        <div class="card-desc">Canal de atendimento em tempo real integrado ao Freshservice</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-canais">
+        <li>Disponibiliza chat ao vivo para usuários no portal de suporte</li>
+        <li>Permite transferência de conversas entre equipes e agentes</li>
+        <li>Centraliza chats e tickets em uma única plataforma</li>
+        <li>Mantém histórico completo das interações dos usuários</li>
+        <li>Possibilita automações e respostas assistidas pelo Freddy AI</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000002832-upgrade-employee-experience-with-freshchat-integration" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 4.4 Freshcaller -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(79, 197, 247, 0);">
+        <img src="https://i.postimg.cc/t4KnXGKx/freshdesk-contact-center-090b9224242d37a5b399b9bc339db85c13ded7f48c28d064ef95bdb958e49573.png" alt="Freshcaller">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#25c16f">Módulo 4.4</div>
+        <div class="card-title">Freshcaller</div>
+        <div class="card-desc">Sistema de telefonia integrado ao gerenciamento de serviços</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-canais">
+        <li>Recebe e realiza chamadas diretamente pela plataforma</li>
+        <li>Converte chamadas em tickets automaticamente</li>
+        <li>Registra gravações e histórico de atendimento</li>
+        <li>Distribui chamadas com base em regras de roteamento</li>
+        <li>Fornece métricas e relatórios detalhados de telefonia</li>
+      </ul>
+    </div>
+  </div>
+
+ <!-- 4.5 Freshdesk -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 197, 247, 0);">
+        <img src="https://i.postimg.cc/x1wN0Vwm/freshdesk-272e8a58dbb467379aedebe2f3846cb24144a1dd9d0b4f7d61eff95fd74ae63a.png" alt="Freshchat">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#25c16f">Módulo 4.5</div>
+        <div class="card-title">Freshdesk</div>
+        <div class="card-desc">Integração com o Freshdesk para suporte omnichannel</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-canais">
+        <li>Compartilha informações entre equipes de suporte e atendimento</li>
+        <li>Centraliza interações provenientes de múltiplos canais</li>
+        <li>Facilita a colaboração entre departamentos</li>
+        <li>Permite sincronização de tickets e atividades</li>
+        <li>Melhora a visibilidade do ciclo completo de atendimento</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000003818-freshservice-freshservice-for-business-teams-freshdesk-out-of-the-box-integration" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div> 
+
+<div class="section-note">
+  <strong>Importante:</strong>
+  Freshchat, Freshcaller e Freshdesk são soluções independentes da Freshworks e podem exigir licenciamento adicional. A disponibilidade das integrações e funcionalidades depende do plano contratado pelo cliente e dos produtos adquiridos em sua assinatura.
+</div>
+
+<!-- 4.6 Portal de Suporte -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 197, 247, 0);">
+        <img src="https://i.postimg.cc/zB5LgSX8/support-portal-74fc657692dd76be0635da4b7fe65d77e772ea92871e68b758612188d0cf4849.png" alt="Freshchat">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#25c16f">Módulo 4.6</div>
+        <div class="card-title">Portal de Suporte</div>
+        <div class="card-desc">Customização do portal do soliciante e agente, configurações de segurança</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-canais">
+        <li>Possibilita personalização visual do portal do solicitante</li>
+        <li>Personalização do portal do agente</li>
+        <li>Configuração dos métodos de segurança</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000000495/page/1" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div> 
+
+<!-- 4.7 Widget de Feedback -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(9, 197, 247, 0);">
+        <img src="https://i.postimg.cc/fRGSwQGb/feedback-widget-2f498f89a28c9b71ba814e80e4719df8d4487153f4889371a3d48565c5430267.png" alt="Widget de Feedback">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#25c16f">Módulo 4.7</div>
+        <div class="card-title">Widget de Feedback</div>
+        <div class="card-desc">Formulário de ticket incorporável em sites e aplicações</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list">
+        <li>Incorporar formulário de ticket diretamente em websites ou aplicações</li>
+        <li>Personalizar aparência, posicionamento e conteúdo via HTML/CSS</li>
+        <li>Copiar código de incorporação gerado e colar no site para ativar</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000000031" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 4.8 Configurações de E-mail e Caixas de Correio -->
+<div class="section-card">
+  <div class="card-header" onclick="toggle(this)">
+    <div class="card-icon" style="background:rgba(9, 197, 247, 0);">
+      <img src="https://i.postimg.cc/YCGmKCsK/email-settings-and-mailboxes-d1d97f41a65765e32733f9dde6ac17dc41e1dc0945ba6c7854e04b8744f2a808.png" alt="Configurações de E-mail e Caixas de Correio">
+    </div>
+    <div class="card-meta">
+      <div class="card-num" style="color:#25c16f">Módulo 4.8</div>
+      <div class="card-title">Configurações de E-mail e Caixas de Correio</div>
+      <div class="card-desc">Gerenciamento dos canais de e-mail utilizados para criação e atualização de tickets</div>
+    </div>
+    <div class="card-toggle">⌄</div>
+  </div>
+  <div class="card-body">
+    <ul class="feature-list">
+      <li>Configurar caixas de correio para recebimento e envio de tickets</li>
+      <li>Converter automaticamente e-mails recebidos em chamados</li>
+      <li>Definir regras de encaminhamento e tratamento de mensagens</li>
+      <li>Configurar assinaturas, respostas automáticas e notificações</li>
+      <li>Gerenciar múltiplas caixas de correio para diferentes equipes ou workspaces</li>
+    </ul>
+    <div class="note_global">
+      <strong>Obs.:</strong> Em ambientes com múltiplos workspaces, as caixas de correio podem ser configuradas de forma independente para cada workspace.
+    </div>
+    <a href="https://support.freshservice.com/support/solutions/articles/154123-setting-up-your-support-email-address"
+       target="_blank"
+       style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:6px 12px;background:rgba(241,80,120,.1);color:#f15078;border:1px solid rgba(241,80,120,.2);border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;transition:opacity .2s;cursor:pointer;"
+       onmouseover="this.style.opacity='0.8'"
+       onmouseout="this.style.opacity='1'">
+      📚 Ver Documentação
+    </a>
+  </div>
+</div>
+
+<!-- 4.9 Páginas de Status -->
+<div class="section-card">
+  <div class="card-header" onclick="toggle(this)">
+    <div class="card-icon" style="background:rgba(9, 197, 247, 0);">
+      <img src="https://i.postimg.cc/C1YZqHL0/status-page-5ea5c1ecaa953ef0a18de373babc56b5c79272cca06796648bb24413a9958847.png" alt="Páginas de Status">
+    </div>
+    <div class="card-meta">
+      <div class="card-num" style="color:#25c16f">Módulo 4.9</div>
+      <div class="card-title">Páginas de Status</div>
+      <div class="card-desc">Comunicação do status operacional dos serviços e incidentes para os usuários</div>
+    </div>
+    <div class="card-toggle">⌄</div>
+  </div>
+  <div class="card-body">
+    <ul class="feature-list">
+      <li>Publicar incidentes, interrupções e manutenções programadas</li>
+      <li>Comunicar atualizações operacionais em tempo real aos usuários</li>
+      <li>Permitir acompanhamento do histórico de incidentes e indisponibilidades</li>
+      <li>Notificar assinantes sobre alterações no status dos serviços</li>
+      <li>Reduzir o volume de tickets durante incidentes por meio da comunicação proativa</li>
+    </ul>
+    <div class="note_global">
+      <strong>Obs.:</strong> São configuradas de forma independente para cada workspace.
+    </div>
+    <a href="https://support.freshservice.com/support/solutions/folders/50000001721"
+       target="_blank"
+       style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:6px 12px;background:rgba(241,80,120,.1);color:#f15078;border:1px solid rgba(241,80,120,.2);border-radius:6px;font-size:13px;font-weight:600;text-decoration:none;transition:opacity .2s;cursor:pointer;"
+       onmouseover="this.style.opacity='0.8'"
+       onmouseout="this.style.opacity='1'">
+      📚 Ver Documentação
+    </a>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- GRUPO 5 — GERENCIAMENTO DE SERVIÇOS            -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="group-block" id="g-service">
+  <div class="group-header">
+    <div class="group-icon" style="background:rgba(232,200,66,.14);"></div>
+    <div>
+      <div class="group-label" style="color:#d33c4e">Seção 5</div>
+      <div class="group-title">Gerenciamento de Serviços</div>
+      <div class="group-desc">Configurações end-to-end para entrega de serviços ITSM (Incidentes, Problemas, Mudanças, Liberações)</div>
+    </div>
+  </div>
+
+  <!-- 5.1 Horário Comercial -->
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/V6RJBrdD/business-hours-112789b1613298eab25e0c19c8dff86e103d5cbe7a398415a810f3376d2ddc3c.png" alt="Horário Comercial">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.1</div>
+        <div class="card-title">Gerenciamento de Mudanças</div>
+        <div class="card-desc">Planejamento, aprovação e implementação de mudanças com mínimo risco</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Definição do horário comercial da empresa</li>
+        <li>Configuração dos feriados anuais (Possibilidade de customização por workspace ou global)</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/156462-setting-default-business-hours" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.2 Políticas de SLA e OLA -->
+ <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/4dZK9bNT/sla-ola-01c0b7954149728e6178271dde99085fb15efbbb859e9e4df00ecaa47ed14a5c.png" alt="Políticas de SLA e OLA">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.2</div>
+        <div class="card-title">Políticas de SLA e OLA</div>
+        <div class="card-desc">Definir acordos de serviço com partes interessadas internas e externas</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Configuração de metas de tempo de resposta e resolução</li>
+        <li>Criação de múltiplos SLAs baseados em critérios específicos (grupo, prioridade, departamento)</li>
+        <li>Definição de regras de escalonamento automático para violações de prazo</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/156459-creating-multiple-sla-policies-for-specific-departments-and-groups" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.3 Matriz de Prioridade -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/nLqjrwx1/priority-matrix-30daead57c383b2b386d412657eda50d6f221a2e2a49f88da0abf78d5ad6dfcf.png" alt="Matriz de Prioridade">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.3</div>
+        <div class="card-title">Matriz de Prioridade</div>
+        <div class="card-desc">Configure a priorização automática de tickets com base na urgência e no impacto</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Automatização da definição da prioridade do ticket eliminando erros operacionais</li>
+        <li>Padronização das regras de serviço baseada no cruzamento de Impacto x Urgência</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/218550-priority-matrix" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.4 Gerente de Campo -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/Z5GvTzGR/field-manager-ab82b93fd98e71d11fb92d1fbce284e0bfea99a3ada984406380d52d8009da5c.png" alt="Gerente de campo">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.4</div>
+        <div class="card-title">Gerente de campo</div>
+        <div class="card-desc">Gerenciar campos para formulários e entradas de tempo</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Criação, edição e exclusão de campos personalizados (textos, menus suspensos, datas)</li>
+        <li>Organização das propriedades do ticket e adaptação do formulário à linguagem da organização</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/154126-manage-ticket-fields-with-field-manager" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.5 Modelos de Formulário -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/8z2f1g27/form-template-6e8addaadc3d8c4fa2f7a6012dfcfb385c3e9c93b183371ba81f44fc73fd4df9.png" alt="Modelos de Formulário">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.5</div>
+        <div class="card-title">Modelos de Formulário</div>
+        <div class="card-desc">Preencha previamente novos formulários para tickets/mudanças repetitivas</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Criação de modelos de preenchimento rápido para incidentes ou mudanças comuns e de alto volume</li>
+        <li>Redução do tempo de digitação na abertura de solicitações manuais pela equipe técnica</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/229834-creating-ticket-and-change-template" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.6 Regras de negócios para formulários -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/DZgSdJ85/business-rules-30bb751e5b1ac074738ef2f8481f5224b82788d1b8779717f6e0fd3be365b121.png" alt="Regras de negócios para formulários">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.6</div>
+        <div class="card-title">Regras de negócios para formulários</div>
+        <div class="card-desc">Defina a lógica condicional para construir formulários dinâmicos</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Ocultar, exibir, habilitar ou desabilitar opções condicionalmente no portal de suporte</li>
+        <li>Tornar o preenchimento de campos obrigatório dependendo da categoria ou item selecionado</li>
+         <li>Exigir informações de um campo de acordo com o preenchimento de campos anteriores</li> 
+         <li>Impedir que os agentes fechem o chamado diretamento/obrigar o preenchimento de campos antes da resolução do chamado</li>
+         <li>Possibilidade de regras específicas para itens de serviço</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000003392-business-rules-usecases" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.7 Tags -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/zB5LgSXf/tags-4d1f84ca98645bb6f7ef628cdde4d8e8b8420d430402c8136ae7bd2ac8115905.png" alt="Tags">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.7</div>
+        <div class="card-title">Tags</div>
+        <div class="card-desc">Gerencie tags que simplificam a pesquisa em sua central de serviço</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Criação, edição e exclusão de marcadores para categorização livre de tickets</li>
+        <li>Otimização dos filtros de busca e organização de anomalias/incidentes específicos</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 5.8 Pesquisas -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/BnrPqfrH/freshsurvey-settings-9fbd44462c5a3fa057323afc811c8f3b48f5822b006eb5bf8c7df15f8b1d601a.png" alt="Pesquisas">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.8</div>
+        <div class="card-title">Pesquisas</div>
+        <div class="card-desc">Avalie a satisfação dos funcionários, a eficiência do serviço ou realize pesquisas de pulso</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Configuração de envio automático de pesquisa após a resolução/fechamento de um chamado (CSAT)</li>
+        <li>Personalização de escalas de pontos e perguntas para medir a satisfação do usuário final</li>
+        <li>Configuração de gatilhos</li>
+        <div class="note_global">
+      <strong>Obs.:</strong> Em ambientes com múltiplos workspaces, as pesquisas podem ser configuradas de forma independente para cada workspace.
+    </div>
+      </ul>
+      <a href="https://support.freshservice.com/en/support/solutions/articles/50000000047-satisfaction-surveys-in-freshservice" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+   <!-- 5.9 Regras de fechamento -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/6qpyHWvr/closure-rules-f69ed8975d3fc7a67193706a8784a9e23679562480d9885d7039d7dc6c843ce3.png" alt="Regras de fechamento">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.9</div>
+        <div class="card-title">Regras de fechamento</div>
+        <div class="card-desc">Definir critérios de atendimento para fechamento de tickets e problemas</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Obrigatoriedade de preenchimento de campos específicos (ex: código de resolução) antes de encerrar</li>
+        <li>Garantia da qualidade e integridade das informações nos relatórios finais</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000000120-enabling-ticket-closure-rules-for-incidents-and-service-requests" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+ <!-- 5.10 Políticas de atribuição de tickets --> 
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/ZRZ9dFKR/ticket-assignment-policies-b79ca6acd1f2a06e65d5e1018583876c163912d5a15eea1f306d76e221966a97.png" alt="Políticas de atribuição de tickets">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.10</div>
+        <div class="card-title">Políticas de atribuição de tickets</div>
+        <div class="card-desc">Atribua tickets aos agentes de acordo com sua disponibilidade, carga de trabalho e habilidades</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Distribuição automática de tickets usando algoritmos (Ex: Round Robin ou Carga de Trabalho)</li>
+        <li>Prevenção de sobrecarga de trabalho roteando incidentes apenas para agentes disponíveis</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000011530-optimise-ticket-assignment-with-ticket-assignment-policies" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.11 Modelos de listas de verificação --> 
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/kGgBjJbN/checklist-templates-3d4e566093c3baa8997914a7d7da05a3dd8393c070b7addca9a1dc17d40b6e28.png" alt="Modelos de listas de verificação">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.11</div>
+        <div class="card-title">Modelos de listas de verificação</div>
+        <div class="card-desc">Crie listas de verificação para ajudar os agentes a atenderem corretamente às solicitações</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Padronização de tarefas sequenciais para processos críticos diretamente no ticket</li>
+        <li>Criação de To-do lists (Checklists) como auxílio visual e metodológico para os analistas</li>
+        <li>Melhoria na compreenssão e resolução dos chamados pelos agentes</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000013904-standardize-service-request-fulfillment-with-agent-checklists" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.12 Catálogo de serviços --> 
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/pTx9FYV3/service-catalog-cc1ac6df908633ed8abd4d244ceb99d4a3fbb99d2de866c3a3f370679ddef431.png" alt="Catálogo de serviços">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.12</div>
+        <div class="card-title">Catálogo de serviços</div>
+        <div class="card-desc">Gerencie a lista de serviços prestados aos seus usuários finais</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Criar e organizar serviços disponíveis para solicitação pelos usuários</li>
+        <li>Definir fluxos de aprovação específicos para cada item do catálogo</li>
+        <li>Configurar formulários personalizados para coleta de informações</li>
+        <li>Automatizar o atendimento de solicitações recorrentes</li>
+        <li>Controlar a visibilidade dos serviços por departamento, grupo ou workspace</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/268226" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.13 Modelos de documentos e assinaturas --> 
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/y8gS48r2/document-templates-b7f8c2354b2f9c3a265f72134684bdb34a35fe18c5462b7aba194ed7b3fe2054.png" alt="Modelos de documentos e assinaturas">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.13</div>
+        <div class="card-title">Modelos de documentos e assinaturas</div>
+        <div class="card-desc">Crie modelos prontos para uso, equipados com formatação, assinaturas e muito mais</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+      <li>Criar modelos reutilizáveis para respostas, aprovações e comunicações</li>
+      <li>Padronizar assinaturas utilizadas pelos agentes</li>
+      <li>Inserir variáveis dinâmicas para preenchimento automático de informações</li>
+      <li>Garantir consistência na comunicação com usuários e equipes</li>
+      <li>Reduzir o tempo gasto na elaboração de conteúdos recorrentes</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000001931/page/1" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.14 Ciclo de Vida de Mudança -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/26w1FbVc/change-lifecycle-10c33176efd33198ba1f3d3d7d7401a304702bef4e92eae3812603b220086cdf.png" alt="Ciclo de Vida de Mudança">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.14</div>
+        <div class="card-title">Ciclo de Vida de Mudança</div>
+        <div class="card-desc">Controlar as transições dentro do ciclo de vida de uma mudança com base em seu tipo</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Definir estágios personalizados para diferentes tipos de mudança</li>
+<li>Controlar transições automáticas entre estados</li>
+<li>Aplicar validações e aprovações obrigatórias em cada etapa</li>
+<li>Garantir conformidade com processos de gerenciamento de mudanças</li>
+<li>Padronizar fluxos para mudanças normais, emergenciais e padrão</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/236100-manage-your-change-processes-with-change-lifecycle" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.15 Política de risco de mudanças -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/503XqY6K/change-risk-policy-f1743a3a11b6519d9be68c939f14e52966ab0311b19396e7ebe9372277f18634.png" alt="Política de risco de mudanças">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.15</div>
+        <div class="card-title">Política de risco de mudanças</div>
+        <div class="card-desc">Identifique e avalie os riscos de mudança com antecedência por meio de insights automatizados</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+       <li>Avaliar automaticamente o nível de risco das mudanças</li>
+<li>Utilizar critérios configuráveis para cálculo de risco</li>
+<li>Identificar mudanças com maior potencial de impacto operacional</li>
+<li>Auxiliar gestores na tomada de decisão antes da implementação</li>
+<li>Melhorar o controle e a governança do processo de mudanças</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000002723" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.16 Integração de funcionários -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/7ZGT8ZWh/employee-onboarding-835f9d1d62a463989a80daaa357e3bdad4f7a60cea1926bcad4c741b6371e1fe.png" alt="Integração de funcionários">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.16</div>
+        <div class="card-title">Integração de funcionários</div>
+        <div class="card-desc">Simplifique os processos para que as partes interessadas colaborem e integrem novos funcionários</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Automatizar tarefas relacionadas à admissão de colaboradores</li>
+<li>Coordenar atividades entre RH, TI, Facilities e demais áreas</li>
+<li>Acompanhar o progresso de cada etapa da integração</li>
+<li>Garantir que acessos, equipamentos e permissões sejam provisionados</li>
+<li>Melhorar a experiência de onboarding dos novos funcionários</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/275146" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.17 Desligamento de funcionários -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/VkrbQkVk/employee-offboarding-fb0c1fa2032be98fa96f4c23cb68ca959c09cde179bcede08535518c7680c023.png" alt="Desligamento de funcionários">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.17</div>
+        <div class="card-title">Desligamento de funcionários</div>
+        <div class="card-desc">Simplifique os processos para as partes interessadas dispensarem funcionários</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+        <li>Automatizar procedimentos relacionados ao desligamento</li>
+<li>Garantir a revogação de acessos e permissões corporativas</li>
+<li>Coordenar atividades entre diferentes departamentos</li>
+<li>Acompanhar pendências e aprovações necessárias</li>
+<li>Reduzir riscos de segurança e conformidade durante o offboarding</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/275146" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+  <!-- 5.18 Jornadas -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/kg6t3gp9/employee-journeys-a36af279d7eea77ec345fc743bd951cbaa9617a27ce6878202e507923464be87.png" alt="Jornadas">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#d33c4e">Módulo 5.18</div>
+        <div class="card-title">Jornadas</div>
+        <div class="card-desc">Crie processos automatizados para jornadas comuns, como a integração</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-serviços">
+       <li>Criar jornadas personalizadas para eventos do ciclo de vida do colaborador</li>
+<li>Automatizar tarefas e aprovações entre diferentes equipes</li>
+<li>Monitorar o andamento das jornadas em tempo real</li>
+<li>Padronizar processos de onboarding, offboarding e movimentações internas</li>
+<li>Melhorar a colaboração entre áreas envolvidas em cada etapa</li>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000002590" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+  </div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- GRUPO 6 — AUTOMAÇÃO & PRODUTIVIDADE            -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="group-block" id="g-automation">
+  <div class="group-header">
+    <div class="group-icon" style="background:rgba(247,147,79,.14);"></div>
+    <div>
+      <div class="group-label" style="color:#9b65c3">Seção 6</div>
+      <div class="group-title">Automação &amp; Produtividade</div>
+      <div class="group-desc">Automação de tarefas, fluxos de trabalho e ferramentas de colaboração</div>
+    </div>
+  </div>
+
+ <!-- 6.1 Automatizador de fluxo de trabalho -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/ydBJZXYg/workflow-c6bf9926a5462131194bf09e4c81a480c9b84f803119bcfe055e09d18c693663.png" alt="Automatizador de fluxo de trabalho">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.1</div>
+        <div class="card-title">Automatizador de fluxo de trabalho</div>
+        <div class="card-desc">Automatize processos usando um construtor de fluxo de trabalho de arrastar e soltar</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Criação de regras baseadas em eventos (Gatilho, Condição, Ação)</li>
+        <li>Automação de atribuição, escalonamento e notificações sem necessidade de código</li>
+        <li>Criação de loops e temporizadores para gerenciar fluxos complexos de aprovação</li>
+        <li>Integração de Webhooks para enviar ou receber dados de sistemas externos automaticamente</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/273935" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<!-- 6.2 Regras do Supervisor -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/B6s8KcQs/supervisor-bb4456271bc70625a191d2a062b8043f2112de6d1ba81eec6fb3de22a02c0149.png" alt="Regras do Supervisor">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.2</div>
+        <div class="card-title">Regras do Supervisor</div>
+        <div class="card-desc">Execute verificações de hora em hora para automatizar ações em tíquetes correspondentes</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Execução de varreduras periódicas baseadas em tempo (ex: fechar tickets inativos há 48h)</li>
+        <li>Monitoramento contínuo de SLAs e envio de lembretes automáticos para clientes ausentes</li>
+        <li>Reatribuição automática de tickets que não receberam a primeira resposta a tempo</li>
+        <li>Identificação e limpeza de tickets com spam ou solicitações duplicadas regularmente</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/157136-creating-supervisor-rules" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<!-- 6.3 Centro de orquestração -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/s25Qx0zc/orchestration-center-4a79680cb042261fcddb7437c41b57e33121761c7ec41bf9e42d8bd2360ddabe.png" alt="Centro de orquestração">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.3</div>
+        <div class="card-title">Centro de orquestração</div>
+        <div class="card-desc">Automatize processos entre ferramentas integrando-se a aplicativos de terceiros</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Integração nativa de ponta a ponta com Active Directory, Azure, AWS e Zoom</li>
+        <li>Automação de provisionamento e desprovisionamento de usuários sem intervenção humana</li>
+        <li>Redução do tempo de resolução conectando o Freshservice a ferramentas de infraestrutura</li>
+        <li>Centralização e padronização das ações de TI executadas em plataformas de terceiros</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000000533" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+
+<!-- 6.4 Credenciais -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/ncwQPDTN/credential-89443540f438499c52a2b262896f487c30bc408613c24302015cc772e019fbeb.png" alt="Credenciais">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.4</div>
+        <div class="card-title">Credenciais</div>
+        <div class="card-desc">Armazene credenciais e faça referência a elas em formulários e fluxos de trabalho</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Cofre seguro para armazenamento de senhas e chaves de API usadas em integrações</li>
+        <li>Gerenciamento centralizado de autenticação para o Centro de Orquestração</li>
+        <li>Controle de acesso restrito, garantindo que apenas processos autorizados utilizem os dados sensíveis</li>
+        <li>Facilidade de atualização de tokens e senhas em um único local, refletindo em todos os fluxos</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000003816-centralized-credential-store" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<!-- 6.5 Automação de cenário -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/501HCq9R/scenario-059f5511da72d381b0bad51051c30f84b646ec4bc363b41ec2c1c95d7571318a.png" alt="Automação de cenário">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.5</div>
+        <div class="card-title">Automação de cenário</div>
+        <div class="card-desc">Crie modelos para realizar várias ações em um ticket com um clique</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Execução de ações em massa (ex: classificar, atribuir e responder) via atalho no ticket</li>
+        <li>Padronização das respostas e procedimentos da equipe de atendimento para incidentes comuns</li>
+        <li>Redução drástica do trabalho manual e repetitivo para os agentes de linha de frente</li>
+        <li>Facilidade de criação de cenários públicos (para toda a equipe) ou privados (apenas para o agente)</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/234446-execute-scenario-automations" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<!-- 6.6 Agendador -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/d1v7ymQf/schedules-e672f15e4189b9ce8c89193c2616b9e9582ba4e2a595b070002d13c27b660aaf.png" alt="Agendador">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.6</div>
+        <div class="card-title">Agendador</div>
+        <div class="card-desc">Agende a criação periódica de tickets para tarefas repetitivas</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Criação automática de requisições de manutenção preventiva (diária, semanal, mensal)</li>
+        <li>Prevenção de esquecimentos em rotinas de backup, auditoria de licenças ou troca de senhas</li>
+        <li>Parametrização completa do ticket gerado, incluindo solicitante, grupo, urgência e tags</li>
+        <li>Relatórios previsíveis de carga de trabalho recorrente para as equipes de infraestrutura</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/195641-schedule-recurring-tickets-using-scheduler-" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<!-- 6.7 Placar de líderes -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/jSpnsYpy/gamification-settings-1b86091d4a621122dd9b07597488fbbe284f345711cb2af8534bb85077059953.png" alt="Placar de líderes">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.7</div>
+        <div class="card-title">Placar de líderes</div>
+        <div class="card-desc">Configure um sistema baseado em pontos para resolução de tickets gamificados</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Gamificação do Service Desk ("Freshservice Arcade") para aumentar o engajamento da equipe</li>
+        <li>Atribuição de troféus, missões e pontos baseados em CSAT, Resolução no Primeiro Contato e SLAs</li>
+        <li>Criação de um ambiente competitivo e saudável entre os analistas de atendimento</li>
+        <li>Painéis visuais para que os agentes acompanhem seu progresso e conquistas em tempo real</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000000050" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<!-- 6.8 Comandos de e-mail -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/YCGmKCsw/email-commands-setting-c99b1133bda7f13239ee4d7280f01953c82d83cee9ceee76389dfa12609faa7c.png" alt="Comandos de e-mail">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.8</div>
+        <div class="card-title">Comandos de e-mail</div>
+        <div class="card-desc">Crie atalhos de e-mail para realizar ações de tickets da sua caixa de entrada</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Atribuição, alteração de status ou prioridade enviando parâmetros formatados direto do email</li>
+        <li>Aumento da agilidade para agentes de campo que operam majoritariamente via dispositivos móveis</li>
+        <li>Atualização de tickets sem a necessidade de fazer login no portal do Freshservice</li>
+        <li>Registro automático do tempo gasto adicionando a tag de comando correspondente no corpo do e-mail</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/157152-performing-actions-on-tickets-using-email-commands" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<!-- 6.9 Colaborar -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/Zn5CfbdL/collaborate-319f9ba45f7d34c13a97132aabee5b5e46d820cda2a9fec4d130e39c7e102551.png" alt="Colaborar">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.9</div>
+        <div class="card-title">Colaborar</div>
+        <div class="card-desc">Habilite conversas usando suas ferramentas de colaboração</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Comunicação em tempo real em tickets integrando o MS Teams ou Slack diretamente na interface</li>
+        <li>Convite a especialistas de outras áreas para discutir problemas sem precisarem de licença de agente</li>
+        <li>Retenção de todo o histórico da conversa anexado permanentemente ao registro do ticket</li>
+        <li>Agilidade na resolução de incidentes complexos através de chats centralizados</li>
+      </ul>
+    </div>
+  </div>
+
+<!-- 6.10 Aplicativos -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/bJTZHDs2/apps-6515f2d822e268fd93b6966cf80bed057addddeb15c96fa97007da1c610c4271.png" alt="Aplicativos">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.10</div>
+        <div class="card-title">Aplicativos</div>
+        <div class="card-desc">Integre e gerencie aplicativos de terceiros usados em seu ecossistema</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Acesso ao Marketplace da Freshworks com centenas de conectores (Jira, Salesforce, Google Workspace)</li>
+        <li>Instalação e gerenciamento de extensões públicas e privadas via portal administrativo</li>
+        <li>Expansão das capacidades nativas do Freshservice com widgets de terceiros na tela do ticket</li>
+        <li>Monitoramento da integridade e atualização das integrações conectadas ao ecossistema</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000002612" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<!-- 6.11 Objetos Personalizados -->
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/wvV1cy7V/business-object-e51fd5595324bdc62314520a989d3943d813def72df6cbd26e94892196405272.png" alt="Objetos Personalizados">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#9b65c3">Módulo 6.11</div>
+        <div class="card-title">Objetos Personalizados</div>
+        <div class="card-desc">Crie objetos referenciáveis para usar em fluxos de trabalho e formulários</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-automacao">
+        <li>Criação de bancos de dados internos (Tabelas) para dados que não são tickets nem ativos (ex: Frota, Lojas)</li>
+        <li>Mapeamento desses objetos personalizados nos formulários do catálogo e automações de fluxo</li>
+        <li>Relação direta dos registros personalizados com requisitantes, departamentos e chamados</li>
+        <li>Criação de visualizações e filtros customizados para gerenciar as informações inseridas</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000000492" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+   <!-- 6.12 Respostas Predefinidas -->
+<div class="section-card">
+  <div class="card-header" onclick="toggle(this)">
+    <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+      <img src="https://i.postimg.cc/bJTZHDs6/canned-response-d9a4512c56d2d897ba3a633dc7bfb98c168e33533cfbf2e166b9034b7ec8fcc2.png" alt="Respostas Predefinidas">
+    </div>
+    <div class="card-meta">
+      <div class="card-num" style="color:#9b65c3">Módulo 6.12</div>
+      <div class="card-title">Respostas Predefinidas</div>
+      <div class="card-desc">Crie respostas prontas para agilizar o atendimento e garantir consistência na comunicação</div>
+    </div>
+    <div class="card-toggle">⌄</div>
+  </div>
+  <div class="card-body">
+    <ul class="feature-list-automacao">
+      <li>Criar modelos de resposta para solicitações recorrentes</li>
+      <li>Padronizar a comunicação entre agentes e usuários finais</li>
+      <li>Utilizar variáveis dinâmicas para preenchimento automático de informações</li>
+      <li>Organizar respostas por categorias para facilitar a localização</li>
+      <li>Reduzir o tempo de atendimento e aumentar a produtividade dos agentes</li>
+    </ul>
+    <a href="https://support.freshservice.com/support/solutions/articles/154963-using-canned-responses-in-ticket-replies"
+       target="_blank"
+       style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;"
+       onmouseover="this.style.opacity='0.8'"
+       onmouseout="this.style.opacity='1'">
+      📚 Ver Documentação
+    </a>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- GRUPO 7 — GERENCIAMENTO DE OPERAÇÕES DE TI     -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="group-block" id="g-it-operations">
+  <div class="group-header">
+    <div class="group-icon" style="background:rgba(41,196,169,.14);">
+    </div>
+    <div>
+      <div class="group-label" style="color:#3278b2">Seção 7</div>
+      <div class="group-title">Gerenciamento de Operações de TI</div>
+      <div class="group-desc">Acompanhamento e gerenciamento a integridade das operações de infraestrutura de TI</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/j5XDQwLD/alert-integrations-b54780e10c51f4cbce51923d7c2a010fd374e5bce88e93c6a7047c6d2433cc6e.png" alt="Ferramentas de monitoramento">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#3278b2">Módulo 7.1</div>
+        <div class="card-title">Ferramentas de monitoramento</div>
+        <div class="card-desc">Integre ferramentas de monitoramento para gerenciar todos os alertas em um único painel</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-operações">
+        <li>Recepção de payloads de plataformas como Datadog, SolarWinds, Zabbix ou via Webhook nativo</li>
+        <li>Redução de ruído com agrupamento inteligente de alertas recorrentes utilizando AIOps</li>
+        <li>Criação automática de incidentes apenas quando alertas específicos cruzam limites críticos</li>
+        <li>Fechamento automático do ticket de incidente quando o sistema de monitoramento envia o sinal de normalização</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000000836" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src=https://i.postimg.cc/yN0gxrKy/on-call-schedules-9ac7e1fe5b97b64aca6a9b5977b44a0d57182ce9b56f013f5ec0242a6d9b304c.png" alt="Cronogramas de plantão">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#3278b2">Módulo 7.2</div>
+        <div class="card-title">Cronogramas de plantão</div>
+        <div class="card-desc">Garanta a cobertura do agente 24h por dia por meio de escalonamento automatizado</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-operações">
+        <li>Criação de escalas (On-Call) rotativas e turnos para tratamento de incidentes fora do horário</li>
+        <li>Notificações imediatas por SMS, ligação (Voice) ou App para garantir que o plantonista atue</li>
+        <li>Definição de regras de escalonamento para acionar o gerente caso o técnico principal não responda</li>
+        <li>Visão de calendário compartilhada para que toda a equipe saiba quem está responsável no momento</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/folders/50000000684" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/nLqjrwxK/manage-post-incident-reports-025326f05f7c99ebe47512c08c01726f01b54a2118411049690631aa39fdb9c1.png" alt="Gerenciar relatórios pós-incidente">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#3278b2">Módulo 8.3</div>
+        <div class="card-title">Gerenciar relatórios pós-incidente</div>
+        <div class="card-desc">Crie e gerencie modelos de relatório pós-incidente (PIR) para análise simplificada</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-operações">
+        <li>Estruturação da Análise de Causa Raiz (RCA) após a resolução de Incidentes Graves (Major Incidents)</li>
+        <li>Geração de documento formal de aprendizado com linha do tempo de ações para auditorias</li>
+        <li>Atribuição de tarefas preventivas decorrentes da análise para evitar a recorrência da falha</li>
+        <li>Exportação padronizada em PDF para apresentação executiva às partes interessadas</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000011497-how-to-create-and-assign-approvals-for-post-incident-reports-in-freshservice-" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+
+<div class="section-card">
+    <div class="card-header" onclick="toggle(this)">
+      <div class="card-icon" style="background:rgba(232, 199, 66, 0);">
+        <img src="https://i.postimg.cc/wvV1cy77/alert-custom-fields-1acfe0f6b33a526d9ea6794de6526abd4722a0a75ac89ffe2254e073f0cc979c.png" alt="Gerenciador de campos de alerta">
+      </div>
+      <div class="card-meta">
+        <div class="card-num" style="color:#3278b2">Módulo 8.4</div>
+        <div class="card-title">Gerenciador de campos de alerta</div>
+        <div class="card-desc">Enriqueça os alertas com dados específicos de cargas recebidas</div>
+      </div>
+      <div class="card-toggle">⌄</div>
+    </div>
+    <div class="card-body">
+      <ul class="feature-list-operações">
+        <li>Extração e mapeamento de campos dinâmicos (JSON) vindos das ferramentas de monitoramento</li>
+        <li>Padronização da exibição de alertas para que a equipe de TI interprete as métricas facilmente</li>
+        <li>Enriquecimento dos incidentes com dados contextuais de carga útil (host, métrica afetada, severidade)</li>
+        <li>Criação de regras de roteamento mais precisas baseadas nos parâmetros capturados do alerta</li>
+      </ul>
+      <a href="https://support.freshservice.com/support/solutions/articles/50000011341-how-to-set-up-custom-fields-for-alert-management-system-" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 6px 12px; background: rgba(241,80,120,.1); color: #f15078; border: 1px solid rgba(241,80,120,.2); border-radius: 6px; font-size: 13px; font-weight: 600; text-decoration: none; transition: opacity 0.2s; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        📚 Ver Documentação
+      </a>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--muted);">
+      ServiceOps
+    </div>
+    <div style="font-size:12px;color:var(--muted);text-align:right;line-height:1.6;">
+      Sede São Paulo · Av. Tamboré, 267 - 28° andar - Torre Norte<br>
+      Alphaville, Barueri - SP · 06460-000
+    </div>
+  </div>
+</footer>
+
+<script>
+  function toggle(header) {
+    const card = header.closest('.section-card');
+    card.classList.toggle('open');
+  }
+  // stagger animation delays
+  document.querySelectorAll('.section-card').forEach((card, i) => {
+    card.style.animationDelay = (i * 0.04) + 's';
+  });
+</script>
+</body>
+</html>
